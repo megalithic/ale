@@ -30,6 +30,18 @@ function! ale#fixers#prettier_eslint#Fix(buffer) abort
     \}
 endfunction
 
+function! ale#fixers#eslint#ProcessEslintDOutput(buffer, output) abort
+    " If the output is an error message, don't use it.
+    for l:line in a:output[:10]
+        if l:line =~# '^Error:'
+            return []
+        endif
+    endfor
+
+    return a:output
+endfunction
+
+
 function! ale#fixers#prettier_eslint#ApplyFixForVersion(buffer, version_output) abort
     let l:options = ale#Var(a:buffer, 'javascript_prettier_eslint_options')
     let l:executable = ale#fixers#prettier_eslint#GetExecutable(a:buffer)
@@ -52,6 +64,7 @@ function! ale#fixers#prettier_eslint#ApplyFixForVersion(buffer, version_output) 
         \       . l:eslint_config_option
         \       . (!empty(l:options) ? ' ' . l:options : '')
         \       . ' --stdin-filepath %s --stdin',
+        \   'process_with': 'ale#fixers#eslint#ProcessFixDryRunOutput',
         \}
     endif
 
