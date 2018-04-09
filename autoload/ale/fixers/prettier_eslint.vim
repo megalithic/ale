@@ -31,9 +31,9 @@ function! ale#fixers#prettier_eslint#Fix(buffer) abort
 endfunction
 
 function! ale#fixers#prettier_eslint#ProcessEslintDOutput(buffer, output) abort
-    " If the output is an error message, don't use it.
+    " If the output is an error or warning message, don't use it.
     for l:line in a:output[:10]
-        if l:line =~# '^Error:'
+        if l:line =~# '^ERROR\|Error\|WARNING\|Warning:'
             return []
         endif
     endfor
