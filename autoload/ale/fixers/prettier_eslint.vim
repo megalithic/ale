@@ -32,7 +32,7 @@ endfunction
 
 function! ale#fixers#prettier_eslint#ProcessEslintDOutput(buffer, output) abort
     " If the output is an error or warning message, don't use it.
-    echo "output: " . output
+    echo "output: " . a:output
     for l:line in a:output[:10]
         if l:line =~# '^WARNING:'
             return []
