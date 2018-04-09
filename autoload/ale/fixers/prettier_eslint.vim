@@ -30,14 +30,19 @@ function! ale#fixers#prettier_eslint#Fix(buffer) abort
     \}
 endfunction
 
-function! ale#fixers#prettier_eslint#ProcessEslintDOutput(buffer, output) abort
+function! ale#fixers#prettier_eslint#ProcessPrettierEslintOutput(buffer, output) abort
     " If the output is an error or warning message, don't use it.
-    echo "output: " . a:output
-    for l:line in a:output[:10]
-        if l:line =~# '^WARNING:'
-            return []
-        endif
-    endfor
+    echo "output[0]: " . a:output[0] . ", len: " . len(a:output)
+
+    if a:output[0] =~# '^=============' && a:output[len(a:output) - 1] =~# '^============='
+      return []
+    endif
+
+    " for l:line in a:output[:10]
+    "     if l:line =~# '^WARNING:'
+    "         return []
+    "     endif
+    " endfor
 
     return a:output
 endfunction
@@ -65,7 +70,7 @@ function! ale#fixers#prettier_eslint#ApplyFixForVersion(buffer, version_output) 
         \       . l:eslint_config_option
         \       . (!empty(l:options) ? ' ' . l:options : '')
         \       . ' --stdin-filepath %s --stdin',
-        \   'process_with': 'ale#fixers#prettier_eslint#ProcessEslintDOutput',
+        \   'process_with': 'ale#fixers#prettier_eslint#ProcessPrettierEslintOutput',
         \}
     endif
 
