@@ -30,7 +30,7 @@ function! ale#fixers#prettier_eslint#Fix(buffer) abort
     \}
 endfunction
 
-function! ale#fixers#eslint#ProcessEslintDOutput(buffer, output) abort
+function! ale#fixers#prettier_eslint#ProcessEslintDOutput(buffer, output) abort
     " If the output is an error message, don't use it.
     for l:line in a:output[:10]
         if l:line =~# '^Error:'
@@ -64,7 +64,7 @@ function! ale#fixers#prettier_eslint#ApplyFixForVersion(buffer, version_output) 
         \       . l:eslint_config_option
         \       . (!empty(l:options) ? ' ' . l:options : '')
         \       . ' --stdin-filepath %s --stdin',
-        \   'process_with': 'ale#fixers#eslint#ProcessFixDryRunOutput',
+        \   'process_with': 'ale#fixers#prettier_eslint#ProcessEslintDOutput',
         \}
     endif
 
